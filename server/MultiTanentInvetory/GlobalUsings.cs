@@ -1,0 +1,15 @@
+﻿global using Microsoft.AspNetCore.HttpLogging;
+global using Microsoft.EntityFrameworkCore;
+global using MultiTanentInvetory.Model.Config;
+global using MultiTanentInvetory.Data;
+global using MultiTanentInvetory.Model.Entities;
+global using MultiTanentInvetory.Contracts;
+global using Constracs;
+global using MultiTanentInvetory.Services;
+global using MultiTanentInvetory.Middlewares;
+global using MultiTanentInvetory.Routes;
+global using DTOs;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.Extensions.Options;
+global using MultiTanentInvetory.Extensions;
+ 

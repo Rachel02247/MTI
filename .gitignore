@@ -1,0 +1,90 @@
+# ---------------------------
+# .NET / Visual Studio
+# ---------------------------
+
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options
+.vs/
+
+# Rider IDE
+.idea/
+
+# NuGet packages
+*.nupkg
+packages/
+.nuget/
+
+# Publish output
+publish/
+
+# ASP.NET temporary files
+appsettings.Development.json
+
+# .NET Core
+*.dll
+*.exe
+*.pdb
+*.app
+*.appref-ms
+*.cache
+*.dbmdl
+*.bak
+*.log
+*.vsix
+*.vsixmanifest
+*.vsmdi
+
+# ---------------------------
+# Angular / Node.js
+# ---------------------------
+
+# Node modules
+node_modules/
+
+# Angular build output
+dist/
+dist-*/
+
+# Temporary files
+tmp/
+temp/
+
+# Environment files (can contain secrets)
+.env
+.env.local
+.env.*.local
+
+# Angular CLI cache
+.angular/
+
+# IDE files
+.vscode/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled JavaScript and map files (if using TypeScript)
+*.js
+*.js.map
+
+# ---------------------------
+# Misc
+# ---------------------------
+
+# Mac system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
