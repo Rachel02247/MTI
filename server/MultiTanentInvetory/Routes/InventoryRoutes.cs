@@ -77,6 +77,7 @@ public static class InventoryRoutes
 
     public static async Task<Results<Ok<string>, NotFound, BadRequest<string>, UnauthorizedHttpResult>> CheckOut(
         int id,
+        ITenantContext @object,
         IInventoryService inventoryService,
         ITenantContext tenantContext)
     {
