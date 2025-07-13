@@ -20,6 +20,7 @@ X-Tenant-ID: alpha-logistics
 {
   "name": "a",
   "category": "Electronics",
+  "description": "a nice and very important",
   "userId": "user123"
 }
 

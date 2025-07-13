@@ -12,7 +12,7 @@ public static class ServicesExtension
         });
 
         builder.Services.AddCors(opt => opt.AddPolicy("AllowAll", policy =>
-  policy.WithOrigins("http://localhost:5020")
+  policy.WithOrigins("http://localhost:5020", "http://localhost:4200")
   .AllowAnyHeader()
   .AllowAnyMethod()
 ));
@@ -20,7 +20,7 @@ public static class ServicesExtension
 
 
         builder.Services.AddDbContext<AppDbContext>(options => {
-            options.UseInMemoryDatabase("InventoryDb");
+            options.UseSqlite("Data Source=inventory.db");
             options.EnableSensitiveDataLogging();
         });
 
@@ -28,7 +28,7 @@ public static class ServicesExtension
         builder.Services.Configure<List<TenantSettings>>(builder.Configuration.GetSection("Tenants"));
 
         builder.Services.AddScoped<ITenantContext, TenantContext>();
-        builder.Services.AddScoped<IInventoryService, InvenoryService>();
+        builder.Services.AddScoped<IInventoryService, InventoryService>();
         builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
         builder.Services.AddSingleton<ITenantConfigurationService, TenantConfigurationService>();
 
