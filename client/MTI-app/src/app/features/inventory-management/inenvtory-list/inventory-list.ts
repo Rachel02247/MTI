@@ -44,20 +44,21 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 export class InventoryList {
 
-   store = inject(InventoryStore);
+  private store = inject(InventoryStore);
   private router = inject(Router);
 
 
   displayedColumns: string[] = ['name', 'category', 'description', 'status', 'actions'];
   dataSource = signal(new MatTableDataSource<Item>());
 
-  isLoading = signal(false);
   filterValue = signal('');
   selectedCategory = signal('');
   categories = ['Electronics', 'Tools', 'Office', 'Other'];
 
-
+  isLoading = this.store.isLoading;
+  items = this.store.items;
   
+
   borrowItem(item: Item) {
 
     if (!item.isCheckedOut) {

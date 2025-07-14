@@ -59,8 +59,8 @@ POST {{MultiTanentInvetory_HostAddress}}/api/tenant/
 Content-Type: application/json
 Accept: application/json
 {
-  "id": 2,
-  "name" : "beta-supply"
+  "id": 3,
+  "name" : "MTI-managment"
 }
 
 ###
