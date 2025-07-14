@@ -20,13 +20,12 @@ X-Tenant-ID: alpha-logistics
 {
   "name": "a",
   "category": "Electronics",
-  "description": "a nice and very important",
-  "userId": "user123"
+  "description": "a nice and very important"
 }
 
 ###
 
-POST {{MultiTanentInvetory_HostAddress}}/api/items/4/checkout
+POST {{MultiTanentInvetory_HostAddress}}/api/items/9/checkout
 Content-Type: application/json
 Accept: application/json
 X-Tenant-ID: alpha-logistics
@@ -52,3 +51,21 @@ X-Tenant-ID: alpha-logistics
 DELETE {{MultiTanentInvetory_HostAddress}}/api/items/3
 Accept: application/json
 X-Tenant-ID: alpha-logistics
+
+
+###
+
+POST {{MultiTanentInvetory_HostAddress}}/api/tenant/
+Content-Type: application/json
+Accept: application/json
+{
+  "id": 2,
+  "name" : "beta-supply"
+}
+
+###
+
+GET {{MultiTanentInvetory_HostAddress}}/api/tenant/
+Accept: application/json
+X-Tenant-ID: alpha-logistics
+

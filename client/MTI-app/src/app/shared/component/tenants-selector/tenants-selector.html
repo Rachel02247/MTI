@@ -1,0 +1,24 @@
+<div class="tenant-selector-row">
+  <mat-select
+    [ngModel]="selectedTenantName"
+    (ngModelChange)="onChange($event)"
+    class="tenant-select"
+    placeholder="Select Tenant"
+    disableRipple
+  >
+    @for (tenant of store.tenants(); track tenant.id) {
+      <mat-option [value]="tenant.name">{{ tenant.name }}</mat-option>
+    }
+  </mat-select>
+
+  <button
+    mat-icon-button
+    (click)="clearSelection()"
+    class="logout-icon"
+    [class.visible]="selectedTenantName"
+    matTooltip="Clear selection"
+    aria-label="Clear tenant selection"
+  >
+    <mat-icon>logout</mat-icon>
+  </button>
+</div>

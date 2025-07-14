@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -12,8 +12,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Items } from '../../../core/services/items';
 import { Item } from '../../../core/models/item.model';
+import { InventoryStore } from '../../../shared/state/InventoryState';
+import { Router } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -32,134 +34,59 @@ import { Item } from '../../../core/models/item.model';
     MatMenuModule,
     MatSnackBarModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressSpinnerModule
+
   ],
   templateUrl: './inventory-list.html',
   styleUrls: ['./inventory-list.scss']
 })
-export class InventoryList implements OnInit {
 
-  displayedColumns: string[] = ['name', 'description', 'category', 'status', 'actions'];
-  dataSource = new MatTableDataSource<Item>();
+export class InventoryList {
 
+   store = inject(InventoryStore);
+  private router = inject(Router);
+
+
+  displayedColumns: string[] = ['name', 'category', 'description', 'status', 'actions'];
+  dataSource = signal(new MatTableDataSource<Item>());
+
+  isLoading = signal(false);
   filterValue = signal('');
   selectedCategory = signal('');
   categories = ['Electronics', 'Tools', 'Office', 'Other'];
 
-  constructor(private snackBar: MatSnackBar, private itemService: Items) { }
 
-  ngOnInit() {
-    this.loadItems();
-  }
-
-  loadItems() {
-    // // Sample data
-    // const items: Item[] = [
-    //   {
-    //     id: 1,
-    //     name: 'Dell Laptop #001',
-    //     description: 'Dell Latitude',
-    //     category: 'Electronics',
-    //     isCheckedOut: true
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'HP Projector #002',
-    //     description: 'HP Projector with HDMI Cable',
-    //     category: 'Electronics',
-    //     isCheckedOut: false
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'Bosch Drill #003',
-    //     description: 'Bosch Electric Drill',
-    //     category: 'Tools',
-    //     isCheckedOut: false
-    //   }
-    // ];
-
-    this.itemService.getItems().subscribe(
-
-      
-      (data: Item[]) => {
-        debugger;
-        this.dataSource.data = data;
-        this.setupFilter();
-      },
-      (error) => {
-        console.error('Failed to load items:', error);
-      }
-    )
-
-  }
-
-  setupFilter() {
-    this.dataSource.filterPredicate = (data: Item, filter: string) => {
-      const searchString = filter.toLowerCase();
-      const categoryMatch = this.selectedCategory ? data.category === this.selectedCategory() : true;
-      const textMatch = data.name.toLowerCase().includes(searchString) ||
-        data.description.toLowerCase().includes(searchString);
-
-      return categoryMatch && textMatch;
-    };
-  }
-
-  applyFilter() {
-    this.dataSource.filter = this.filterValue().trim().toLowerCase();
-    this.setupFilter();
-    this.dataSource._updateChangeSubscription();
-  }
-
-  onCategoryChange() {
-    this.applyFilter();
-  }
-
-  clearFilters() {
-    this.filterValue.set('');
-    this.selectedCategory.set('');
-    this.dataSource.filter = '';
-  }
-
+  
   borrowItem(item: Item) {
+
     if (!item.isCheckedOut) {
-      item.isCheckedOut = true;
-      this.itemService.checkOutItem(item.id.toString()).subscribe(
-        () => {
-          this.snackBar.open(`Item "${item.name}" borrowed successfully`, 'Close', {
-            duration: 3000
-          });
-        }
-      );
+      this.store.checkoutItem(item.id.toString())
+
     }
   }
+
 
   returnItem(item: Item) {
+
     if (item.isCheckedOut) {
-      item.isCheckedOut = false;
-      this.itemService.checkInItem(item.id.toString()).subscribe(
-        () => {
-          this.snackBar.open(`Item "${item.name}" returned successfully`, 'Close', {
-            duration: 3000
-          });
-        }
-      );
+      this.store.checkinItem(item.id.toString());
     }
+
   }
 
-  editItem(item: Item) {
-    // Open edit dialog here
-    console.log('Edit item:', item);
+
+  editItem(id: number) {
+    this.router.navigate(['edit-item', id]);
   }
+
 
   deleteItem(item: Item) {
-    const index = this.dataSource.data.indexOf(item);
-    if (index > -1) {
-      this.dataSource.data.splice(index, 1);
-      this.dataSource._updateChangeSubscription();
-      this.snackBar.open(`Item "${item.name}" deleted successfully`, 'Close', {
-        duration: 3000
-      });
-    }
+    this.store.softDeleteItem(item.id.toString())
+  }
+
+  addItem() {
+    this.router.navigate(['/add-item']);
   }
 
   getStatusClass(status: string): string {

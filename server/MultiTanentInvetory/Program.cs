@@ -1,3 +1,4 @@
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddApplicationConfiguration();
@@ -9,6 +10,7 @@ app.UseCors("AllowAll");
 app.UseMiddleware<TenantMiddleware>();
 
 app.MapInventoryRoutes();
+app.MapTenantRoutes();
 app.MapDebugRoutes();
 
 app.Run();

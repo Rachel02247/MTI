@@ -12,4 +12,9 @@ global using DTOs;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.Extensions.Options;
 global using MultiTanentInvetory.Extensions;
- 
+global using MultiTanentInventory.Model.Entities;
+global using MultiTanentInventory.Model.DTOs;
+global using MultiTanentInventory.Contracts;
+global using MultiTanentInventory.Routes;
+
+

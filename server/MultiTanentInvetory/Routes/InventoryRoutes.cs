@@ -10,6 +10,7 @@ public static class InventoryRoutes
         inventoryGroup.MapGet("", GetAll);
         inventoryGroup.MapGet("{id}", GetById);
         inventoryGroup.MapPost("", Create);
+        inventoryGroup.MapPut("{id}", Update);
         inventoryGroup.MapDelete("{id}", SoftDelete);
         inventoryGroup.MapPost("{id:int}/checkout", CheckOut);
         inventoryGroup.MapPost("{id:int}/checkin", CheckIn);
@@ -47,7 +48,7 @@ public static class InventoryRoutes
     }
 
     public static async Task<Results<Created<InventoryItemDto>, UnauthorizedHttpResult>> Create(
-        CreateInventoryItemRequest request,
+        CreateOrUpdateItemRequest request,
         IInventoryService inventoryService,
         ITenantContext tenantContext)
     {
@@ -57,6 +58,21 @@ public static class InventoryRoutes
 
         var newItem = await inventoryService.CreateAsync(request, tenantId);
         return TypedResults.Created($"/api/items/{newItem.Id}", newItem);
+    }
+
+    public static async Task<Results<Ok<InventoryItemDto>, NotFound, UnauthorizedHttpResult>> Update(
+        int id,
+        CreateOrUpdateItemRequest request,
+        IInventoryService inventoryService,
+        ITenantContext tenantContext)
+    {
+        var tenantId = tenantContext.CurrentTenantId;
+        if (tenantId == null)
+            return TypedResults.Unauthorized();
+        var updatedItem = await inventoryService.UpdateAsync(id, request, tenantId);
+        if (updatedItem == null)
+            return TypedResults.NotFound();
+        return TypedResults.Ok(updatedItem);
     }
 
     public static async Task<Results<Ok<string>, NotFound, UnauthorizedHttpResult>> SoftDelete(
@@ -75,7 +91,7 @@ public static class InventoryRoutes
         return TypedResults.Ok("Item was soft deleted successfully.");
     }
 
-    public static async Task<Results<Ok<string>, NotFound, BadRequest<string>, UnauthorizedHttpResult>> CheckOut(
+    public static async Task<Results<Ok<string>, NotFound, BadRequest<string>, UnauthorizedHttpResult, ForbidHttpResult>> CheckOut(
         int id,
         ITenantContext @object,
         IInventoryService inventoryService,
