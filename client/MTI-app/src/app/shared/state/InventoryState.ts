@@ -34,15 +34,6 @@ export const InventoryStore = signalStore(
 
     withState(initialState),
 
-    withComputed((state) => ({
-        avaliableItems: computed(() =>
-            state.items().filter((item) => !item.isCheckedOut)
-        ),
-        checkedOutItems: computed(() =>
-            state.items().filter((item) => item.isCheckedOut)
-        )
-    })),
-
     withMethods((store, inventoryService = inject(Inventory), tenantStore = inject(TenantStore), snack = inject(MatSnackBar)) => {
 
 
