@@ -32,7 +32,7 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
         return new InventoryItemDto(item.Id, item.Name, item.Category, item.Description, item.IsActive, item.IsCheckedOut);
     }
 
-    public async Task<InventoryItemDto> CreateAsync(CreateInventoryItemRequest request, string tenantId)
+    public async Task<InventoryItemDto> CreateAsync(CreateOrUpdateItemRequest request, string tenantId)
     {
         var newItem = new InventoryItem
         {
@@ -47,6 +47,20 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
         await _inventoryRepository.AddAsync(newItem);
 
         return new InventoryItemDto(newItem.Id, newItem.Name, newItem.Category, newItem.Description, newItem.IsActive, newItem.IsCheckedOut);
+    }
+
+    public async Task<InventoryItemDto?> UpdateAsync(int id, CreateOrUpdateItemRequest request, string tenantId)
+    {
+        var item = await _inventoryRepository.GetByIdAsync(id, tenantId);
+        if (item == null || !item.IsActive) return null;
+        item = item with
+        {
+            Name = request.Name ?? item.Name,
+            Category = request.Category ?? item.Category,
+            Description = request.Description 
+        };
+        await _inventoryRepository.UpdateAsync(item);
+        return new InventoryItemDto(item.Id, item.Name, item.Category, item.Description, item.IsActive, item.IsCheckedOut);
     }
 
     public async Task<bool> SoftDeleteAsync(int id, string tenantId)

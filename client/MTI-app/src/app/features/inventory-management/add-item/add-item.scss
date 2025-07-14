@@ -1,0 +1,28 @@
+.add-item-card {
+  margin: 50px auto;
+  padding: 24px;
+  max-width: 500px;
+
+  h2 {
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .full-width {
+      width: 100%;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 16px;
+      
+    }
+  }
+}

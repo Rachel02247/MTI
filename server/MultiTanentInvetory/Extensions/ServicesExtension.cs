@@ -1,5 +1,7 @@
 ﻿
 
+using MultiTanentInventory.Services;
+
 namespace MultiTanentInvetory.Extensions;
 
 public static class ServicesExtension
@@ -28,6 +30,8 @@ public static class ServicesExtension
         builder.Services.Configure<List<TenantSettings>>(builder.Configuration.GetSection("Tenants"));
 
         builder.Services.AddScoped<ITenantContext, TenantContext>();
+        builder.Services.AddScoped<ITenantService, TenantService>();
+        builder.Services.AddScoped<ITenantRepository, TenantRepository>();
         builder.Services.AddScoped<IInventoryService, InventoryService>();
         builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
         builder.Services.AddSingleton<ITenantConfigurationService, TenantConfigurationService>();

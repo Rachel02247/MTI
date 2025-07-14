@@ -1,0 +1,45 @@
+.inventory-toolbar {
+  border-radius: 8px 8px 0 0;
+  padding: 40px 80px 40px 40px;
+  background-color: #4a4257;
+  
+  .inventory-title {
+    font-size: 30px;
+    font-weight: 500;
+    color: rgb(227, 220, 243);
+  }
+
+  .inventory-sub-title {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgb(205, 195, 226);
+    margin-left: 8px;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .tenant-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+  .tenant-dropdown {
+    width: 140px;
+    
+    ::ng-deep .mat-mdc-form-field-infix {
+      color: white;
+    }
+    
+    ::ng-deep .mat-mdc-select-value {
+      color: white;
+    }
+    
+    ::ng-deep .mat-mdc-select-arrow {
+      color: white;
+    }
+  }
+}

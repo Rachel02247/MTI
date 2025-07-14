@@ -15,6 +15,13 @@ public class TenantMiddleware
 
     public async Task InvokeAsync(HttpContext context, ITenantContext tenantContext)
     {
+
+        if (context.Request.Path.StartsWithSegments("/api/tenant"))
+        {
+            await _next(context);
+            return;
+        }
+
         if (!context.Request.Headers.TryGetValue("X-Tenant-ID", out var tenantHeader))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;

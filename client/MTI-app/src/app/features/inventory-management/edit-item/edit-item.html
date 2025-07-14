@@ -1,0 +1,32 @@
+<mat-card class="edit-item-card">
+    <h2>Edit Item</h2>
+
+    <form (ngSubmit)="save()">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name</mat-label>
+            <input matInput [(ngModel)]="item.name" name="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <input matInput [(ngModel)]="item.description" name="description">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select [(ngModel)]="item.category" name="category" required>
+                @for (cat of categories; track cat) {
+                <mat-option [value]="cat">
+                    {{ cat }}
+                </mat-option>
+                }
+
+            </mat-select>
+        </mat-form-field>
+
+        <div class="actions">
+            <button mat-raised-button color="primary" type="submit">Save</button>
+            <button mat-stroked-button color="warn" type="button" (click)="cancel()">Cancel</button>
+        </div>
+    </form>
+</mat-card>
