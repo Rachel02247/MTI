@@ -16,40 +16,37 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   standalone: true,
   imports: [
     CommonModule,
-     FormsModule,
-      MatSelect,
-      MatOption,
-      MatIcon,
-      MatButtonModule,
-      MatIconModule,
-      MatTooltipModule
-    ],
+    FormsModule,
+    MatSelect,
+    MatOption,
+    MatIcon,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule
+  ],
   templateUrl: './tenants-selector.html',
   styleUrls: ['./tenants-selector.scss']
 })
-export class TenantsSelector{
+export class TenantsSelector {
 
   store = inject(TenantStore);
   tenantService = inject(Tenant);
 
 
 
-  tenants: TenantDetail[] = [];
+  tenants = this.store.tenants;
+  selectedTenantName = this.store.selectedTenant;
 
-selectedTenantName: string = '';
-
-onChange(name: string) {
-  this.selectedTenantName = name;
-  this.store.setSelectedTenant(name);
-}
+  onChange(name: string) {
+    this.store.setSelectedTenant(name);
+  }
 
   clearSelection() {
-    this.selectedTenantName = '';
     this.store.setSelectedTenant('');
   }
 }
 
- 
+
 
 
 

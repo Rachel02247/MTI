@@ -1,12 +1,23 @@
- <mat-toolbar color="primary" class="inventory-toolbar">
-    <span class="inventory-title">MTI <span class="inventory-sub-title">Multi Tenants Inventory</span></span>
-          <span class="spacer"></span>
+<mat-toolbar color="primary" class="inventory-toolbar">
+  <span class="inventory-title">MTI <span class="inventory-sub-title">Multi Tenants Inventory</span></span>
+  <span class="spacer"></span>
+
+<div class="connection-indicator"
+     [ngClass]="connectionStatus$ | async"
+     [matTooltip]="
+       (connectionStatus$ | async) === 'connected' ? 'Connected to Hub' :
+       (connectionStatus$ | async) === 'reconnecting' ? 'Reconnecting...' :
+       'Disconnected from Hub'
+     ">
+  <mat-icon>wifi</mat-icon>
+</div>
 
 
+  <div class="tenant-selector">
+    <app-tenants-selector></app-tenants-selector>
+  </div>
 
-    <div class="tenant-selector">
-      <app-tenants-selector></app-tenants-selector>
-    </div>
+  
 
 
-  </mat-toolbar>
+</mat-toolbar>

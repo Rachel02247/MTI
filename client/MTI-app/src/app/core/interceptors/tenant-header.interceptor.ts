@@ -4,6 +4,11 @@ import { TenantStore } from '../../shared/state/TenantState';
 
 export const tenantHeaderInterceptor: HttpInterceptorFn = (req, next) => {
 
+  console.log(req.url)
+  if(req.url.includes('hub')){
+    return next(req);
+  }
+
   const store = inject(TenantStore);
 
   console.log('Tenant ID from store:', store.selectedTenant());

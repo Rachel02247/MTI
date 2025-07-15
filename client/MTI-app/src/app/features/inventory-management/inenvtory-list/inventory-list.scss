@@ -18,7 +18,7 @@
   h2 {
     font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: #716684;
     margin: 0;
   }
 }
@@ -187,3 +187,66 @@
 .delete-icon{
   color: #af4c4c;
 }
+
+
+
+.row-highlight-add {
+  background-color: #fff59d  !important; 
+  animation: fadeHighlight 3s ease-in-out forwards;
+}
+
+.row-highlight-update {
+  background-color: #fff6eb !important; 
+  animation: fadeHighlight 3s ease-in-out forwards;
+}
+
+.row-highlight-deleted {
+  background-color: #ffebee !important; 
+  animation: fadeHighlight 3s ease-in-out forwards;
+}
+
+@keyframes fadeHighlight {
+  0% { background-color: #fff59d; }
+  100% { background-color: transparent; }
+}
+
+.center-select-tenant {
+  text-align: center;
+  padding: 5px 24px 48px 24px;
+  
+
+  
+  font-size: 18px;
+  font-weight: 500;
+  color: #888888;       
+  
+  cursor: pointer;
+  user-select: none;
+}
+
+.center-select-tenant mat-icon {
+  font-size: 20px;
+  color: #888888;       
+  animation: bounce 1.5s infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+
+.add-item-icon{
+   margin-right: 6px;
+} 
+
+.items-icon{
+  position: relative;
+  top: 4px;
+}
+

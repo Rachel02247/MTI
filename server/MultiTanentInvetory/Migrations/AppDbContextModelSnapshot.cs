@@ -9,7 +9,7 @@ using MultiTanentInvetory.Data;
 namespace MultiTanentInventory.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    partial class AppDbMcpContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

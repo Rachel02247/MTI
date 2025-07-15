@@ -1,7 +1,4 @@
 ﻿
-
-using MultiTanentInventory.Services;
-
 namespace MultiTanentInvetory.Extensions;
 
 public static class ServicesExtension
@@ -17,6 +14,8 @@ public static class ServicesExtension
   policy.WithOrigins("http://localhost:5020", "http://localhost:4200")
   .AllowAnyHeader()
   .AllowAnyMethod()
+  .AllowCredentials()
+
 ));
 
 
@@ -28,6 +27,10 @@ public static class ServicesExtension
 
 
         builder.Services.Configure<List<TenantSettings>>(builder.Configuration.GetSection("Tenants"));
+
+        builder.Services.AddSignalR();
+
+
 
         builder.Services.AddScoped<ITenantContext, TenantContext>();
         builder.Services.AddScoped<ITenantService, TenantService>();

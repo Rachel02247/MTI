@@ -43,3 +43,34 @@
     }
   }
 }
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 60px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.connection-indicator.connected {
+  color: #2e7d32; 
+  background-color: #e8f5e9;
+}
+
+.connection-indicator.disconnected {
+  color: #c62828; 
+  background-color: #ffebee;
+}
+
+.connection-indicator.reconnecting {
+  color: #ef6c00;           
+  background-color: #fff3e0; 
+}
+
+
+.status-label {
+  font-size: 13px;
+}
