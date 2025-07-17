@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using MultiTanentInventory.Hubs;
-
+﻿
 namespace MultiTanentInvetory.Services;
 
-public class InventoryService(IInventoryRepository _inventoryRepository, ITenantConfigurationService _tenantConfigurationService, IHubContext<InventoryHub> _hubContext) : IInventoryService
+public class InventoryService(
+    IInventoryRepository _inventoryRepository,
+    ITenantConfigurationService _tenantConfigurationService,
+    IClientNotifier _clientNotifier,
+    IMapper _mapper) : IInventoryService
 {
-  
-
-
     public async Task<IEnumerable<InventoryItemDto>> GetAllAsync(string tenantId)
     {
         var items = await _inventoryRepository.GetAllAsync(tenantId);
 
         return items
             .Where(i => i.IsActive)
-            .Select(i => new InventoryItemDto(i.Id, i.Name, i.Category, i.Description, i.IsActive, i.IsCheckedOut, tenantId));
+            .Select(i => _mapper.Map<InventoryItemDto>(i, opt => opt.Items["TenantId"] = tenantId));
     }
 
     public async Task<InventoryItemDto?> GetByIdAsync(int id, string tenantId)
@@ -22,16 +21,14 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
         var item = await _inventoryRepository.GetByIdAsync(id, tenantId);
         if (item == null || !item.IsActive) return null;
 
-        return new InventoryItemDto(item.Id, item.Name, item.Category, item.Description, item.IsActive, item.IsCheckedOut, tenantId);
+        return _mapper.Map<InventoryItemDto>(item, opt => opt.Items["TenantId"] = tenantId);
     }
 
     public async Task<InventoryItemDto> CreateAsync(CreateOrUpdateItemRequest request, string tenantId)
     {
-        var newItem = new InventoryItem
+        var newItem = _mapper.Map<InventoryItem>(request);
+        newItem = newItem with
         {
-            Name = request.Name,
-            Category = request.Category,
-            Description = request.Description,
             TenantId = tenantId,
             IsActive = true,
             IsCheckedOut = false
@@ -39,31 +36,27 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
 
         await _inventoryRepository.AddAsync(newItem);
 
-         var dto =  new InventoryItemDto(newItem.Id, newItem.Name, newItem.Category, newItem.Description, newItem.IsActive, newItem.IsCheckedOut, tenantId);
-        
-        await _hubContext.Clients.All.SendAsync("itemAdded", dto);
-
+        var dto = _mapper.Map<InventoryItemDto>(newItem, opt => opt.Items["TenantId"] = tenantId);
+        await _clientNotifier.NotifyItemAdded(dto);
         return dto;
     }
 
     public async Task<InventoryItemDto?> UpdateAsync(int id, CreateOrUpdateItemRequest request, string tenantId)
     {
         var item = await _inventoryRepository.GetByIdAsync(id, tenantId);
-
         if (item == null || !item.IsActive) return null;
 
         item = item with
         {
             Name = request.Name ?? item.Name,
             Category = request.Category ?? item.Category,
-            Description = request.Description 
+            Description = request.Description
         };
 
         await _inventoryRepository.UpdateAsync(item);
 
-        var dto = new InventoryItemDto(item.Id, item.Name, item.Category, item.Description, item.IsActive, item.IsCheckedOut, tenantId);
-        await _hubContext.Clients.All.SendAsync("itemUpdated", dto);
-
+        var dto = _mapper.Map<InventoryItemDto>(item, opt => opt.Items["TenantId"] = tenantId);
+        await _clientNotifier.NotifyItemUpdated(dto);
         return dto;
     }
 
@@ -74,8 +67,9 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
 
         item = item with { IsActive = false };
         await _inventoryRepository.UpdateAsync(item);
-        await _hubContext.Clients.All.SendAsync("itemDeleted", item);
 
+        var dto = _mapper.Map<InventoryItemDto>(item, opt => opt.Items["TenantId"] = tenantId);
+        await _clientNotifier.NotifyItemRemoved(dto);
         return true;
     }
 
@@ -97,7 +91,10 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
 
         item = item with { IsCheckedOut = true };
         await _inventoryRepository.UpdateAsync(item);
-        return null; 
+
+        await _clientNotifier.NotifyItemCheckOut(item.Id, item.TenantId);
+
+        return null;
     }
 
     public async Task<string?> CheckInAsync(int id, string tenantId)
@@ -109,7 +106,10 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
 
         item = item with { IsCheckedOut = false };
         await _inventoryRepository.UpdateAsync(item);
-        return null; 
+
+        await _clientNotifier.NotifyItemCheckIn(id, item.TenantId);
+
+        return null;
     }
 
     public async Task<bool> CanCompanyCheckoutMoreAsync(string tenantId)
@@ -123,5 +123,4 @@ public class InventoryService(IInventoryRepository _inventoryRepository, ITenant
 
         return checkedOutCount < config.MaxItemsPerUser;
     }
-
 }

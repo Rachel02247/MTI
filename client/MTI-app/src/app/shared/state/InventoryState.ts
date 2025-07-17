@@ -15,8 +15,6 @@ import { CreateOrUpdateItem } from '../../core/models/createOrUpdateItem.model';
 import { TenantStore } from './TenantState';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
-import { InventorySignalR } from '../../core/services/inventoy-signal-r';
-import { markItemAsHandled } from '../../core/utils/signalr-utils';
 
 
 type InventoryState = {
@@ -24,7 +22,7 @@ type InventoryState = {
     isLoading: boolean;
     error: string | null;
     recentlyHighlightedId: number | null;
-    recentlyHighlightedAction: 'add' | 'update' | 'delete' | null;
+    recentlyHighlightedAction: 'add' | 'update' | 'delete' | 'checkin' | 'checkout' | null;
 };
 
 const initialState: InventoryState = {
@@ -92,7 +90,6 @@ export const InventoryStore = signalStore(
 
                                 }),
                                     snack.open(`Item "${newItem.name}" added successfully`, 'Close', { duration: 4000 });
-                                markItemAsHandled(newItem.id);
                                 loadItems()
                             },
                             error: (error: HttpErrorResponse) => {
@@ -167,7 +164,6 @@ export const InventoryStore = signalStore(
                                     ), error: null
                                 });
                                 snack.open(`Item deleted successfully`, 'Close', { duration: 4000 });
-                                markItemAsHandled(parseInt(itemId));
                                 loadItems();
                             },
                             error: (error: HttpErrorResponse) => {
@@ -192,7 +188,6 @@ export const InventoryStore = signalStore(
                                     ), error: null
                                 });
                                 snack.open(`Item "${resultItem.name}" updated successfully`, 'Close', { duration: 4000 });
-                                markItemAsHandled(resultItem.id);
                                 loadItems();
                             },
                             error: (error: HttpErrorResponse) => {
@@ -254,7 +249,7 @@ export const InventoryStore = signalStore(
                 recentlyHighlightedAction: 'delete',
 
             });
-            snack.open(`🗑️ Item "${deletedItem?.name ?? id}" was deleted by another user`, 'Close', 
+            snack.open(`🗑️ Item "${deletedItem?.name ?? id}" was deleted by another user`, 'Close',
                 { duration: 4000 });
 
             setTimeout(() => {
@@ -266,6 +261,37 @@ export const InventoryStore = signalStore(
             }, 3000);
         };
 
+        const itemCheckedOut = (id: number) => {
+            const checkedOutItem = store.items().find(i => i.id === id);
+            if (!checkedOutItem) return;
+            patchState(store, {
+                items: store.items().map(i =>
+                    i.id === id ? { ...i, isCheckedOut: true } : i
+                ),
+                recentlyHighlightedId: id,
+                recentlyHighlightedAction: 'checkout'
+            });
+            snack.open(`📤 Item "${checkedOutItem.name}" was checked out by another user`, 'Close', { duration: 4000 });
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
+
+        const itemCheckedIn = (id: number) => {
+            const checkedInItem = store.items().find(i => i.id === id);
+            if (!checkedInItem) return;
+            patchState(store, {
+                items: store.items().map(i =>
+                    i.id === id ? { ...i, isCheckedOut: false } : i
+                ),
+                recentlyHighlightedId: id,
+                recentlyHighlightedAction: 'checkin'
+            });
+            snack.open(`📥 Item "${checkedInItem.name}" was checked in by another user`, 'Close', { duration: 4000 });
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
 
 
 
@@ -279,7 +305,9 @@ export const InventoryStore = signalStore(
             updateItem,
             itemAdded,
             itemUpdated,
-            itemDeleted
+            itemDeleted,
+            itemCheckedOut,
+            itemCheckedIn
         };
     })
 

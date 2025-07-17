@@ -38,7 +38,7 @@ export class AddItem {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
-  categories = ['Laptop', 'Chair', 'Monitor', 'Phone'];
+  categories = [ "Electronics", "Furniture", "Books",  "Jwelery" ];
 
   form = this.fb.group({
     name: ['', Validators.required],

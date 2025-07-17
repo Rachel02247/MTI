@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.Http;
+
 namespace MultiTanentInvetory.Routes;
 
 public static class InventoryRoutes
@@ -50,11 +52,13 @@ public static class InventoryRoutes
     public static async Task<Results<Created<InventoryItemDto>, UnauthorizedHttpResult>> Create(
         CreateOrUpdateItemRequest request,
         IInventoryService inventoryService,
-        ITenantContext tenantContext)
+        ITenantContext tenantContext
+        )
     {
         var tenantId = tenantContext.CurrentTenantId;
         if (tenantId == null)
             return TypedResults.Unauthorized();
+
 
         var newItem = await inventoryService.CreateAsync(request, tenantId);
         return TypedResults.Created($"/api/items/{newItem.Id}", newItem);
@@ -64,11 +68,15 @@ public static class InventoryRoutes
         int id,
         CreateOrUpdateItemRequest request,
         IInventoryService inventoryService,
-        ITenantContext tenantContext)
+        ITenantContext tenantContext
+        )
     {
         var tenantId = tenantContext.CurrentTenantId;
+
         if (tenantId == null)
             return TypedResults.Unauthorized();
+
+
         var updatedItem = await inventoryService.UpdateAsync(id, request, tenantId);
         if (updatedItem == null)
             return TypedResults.NotFound();
@@ -78,11 +86,13 @@ public static class InventoryRoutes
     public static async Task<Results<Ok<string>, NotFound, UnauthorizedHttpResult>> SoftDelete(
         int id,
         IInventoryService inventoryService,
-        ITenantContext tenantContext)
+        ITenantContext tenantContext
+        )
     {
         var tenantId = tenantContext.CurrentTenantId;
         if (tenantId == null)
             return TypedResults.Unauthorized();
+
 
         var deleted = await inventoryService.SoftDeleteAsync(id, tenantId);
         if (!deleted)

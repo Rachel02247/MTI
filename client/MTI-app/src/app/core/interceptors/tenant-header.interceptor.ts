@@ -15,6 +15,7 @@ export const tenantHeaderInterceptor: HttpInterceptorFn = (req, next) => {
   const cloned = req.clone({
     setHeaders: {
       'X-Tenant-ID': store.selectedTenant() || '',
+      'X-SignalR-Connection-ID': store.signalRConnectionId() || ''
     },
   });
   return next(cloned);

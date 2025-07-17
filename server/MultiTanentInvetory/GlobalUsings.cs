@@ -18,4 +18,8 @@ global using MultiTanentInventory.Contracts;
 global using MultiTanentInventory.Routes;
 global using MultiTanentInventory.Services;
 global using Microsoft.AspNetCore.SignalR;
+global using MultiTanentInventory.Hubs;
+global using AutoMapper;
+global using  MultiTanentInvetory.Mapping;
+
 

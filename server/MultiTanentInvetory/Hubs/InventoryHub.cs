@@ -1,19 +1,24 @@
 ﻿
 namespace MultiTanentInventory.Hubs;
 
-public class InventoryHub : Hub
-{
-    public const string Path = "/hubs/inventory";
 
-    public override Task OnConnectedAsync()
+
+public class InventoryHub(ISignalRCallerContext _callerContext) : Hub
+{
+
+    public async Task RegisterTenant(string tenantId)
     {
-        Console.WriteLine($"Client connected: {Context.ConnectionId}");
-        return base.OnConnectedAsync();
+        string connectionId = Context.ConnectionId;
+
+        _callerContext.CurrentConnectionId = connectionId;
+
+        await Groups.AddToGroupAsync(connectionId, tenantId);
     }
 
-    public override Task OnDisconnectedAsync(Exception? exception)
+    public override Task OnDisconnectedAsync(Exception exception)
     {
-        Console.WriteLine($"Client disconnected: {Context.ConnectionId}");
         return base.OnDisconnectedAsync(exception);
     }
 }
+
+
