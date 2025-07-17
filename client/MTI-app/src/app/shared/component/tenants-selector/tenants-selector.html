@@ -1,6 +1,6 @@
 <div class="tenant-selector-row">
   <mat-select
-    [ngModel]="selectedTenantName"
+    [ngModel]="selectedTenantName()"
     (ngModelChange)="onChange($event)"
     class="tenant-select"
     placeholder="Select Tenant"
@@ -15,7 +15,7 @@
     mat-icon-button
     (click)="clearSelection()"
     class="logout-icon"
-    [class.visible]="selectedTenantName"
+    [class.visible]="selectedTenantName()"
     matTooltip="Clear selection"
     aria-label="Clear tenant selection"
   >

@@ -19,7 +19,7 @@ export class InventoryManagement implements OnInit {
 
   
   ngOnInit() {
-    this.Inventorystore.loadItems();
+    // this.Inventorystore.loadItems();
     this.TenantStore.loadTenants();
 
   }

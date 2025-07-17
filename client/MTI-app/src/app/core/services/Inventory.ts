@@ -22,8 +22,8 @@ export class Inventory {
     return this.http.get<Item>(`${this.apiUrl}/${id}`);
   }
 
-  addItem(item: CreateOrUpdateItem): Observable<CreateOrUpdateItem> {
-    return this.http.post<CreateOrUpdateItem>(this.apiUrl, item);
+  addItem(item: CreateOrUpdateItem): Observable<Item> {
+    return this.http.post<Item>(this.apiUrl, item);
   }
 
   checkOutItem(itemId: string): Observable<void> {
@@ -39,8 +39,6 @@ export class Inventory {
   }
 
   updateItem(itemId: number, item: CreateOrUpdateItem): Observable<Item> {
-  console.log('itemId:', itemId, typeof itemId);
-
     return this.http.put<Item>(`${this.apiUrl}/${itemId}`, item);
   }
 

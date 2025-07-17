@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTanentInventory", "Mul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMTI", "TestMTI\TestMTI.csproj", "{7DCCF57E-3434-42DD-A011-2E5701F2D06A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenantInventory.AppHost", "MultiTenantInventory.AppHost\MultiTenantInventory.AppHost.csproj", "{E6B660BA-1CA4-472E-AB2D-A54B6000181F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTenantInventory.ServiceDefaults", "MultiTenantInventory.ServiceDefaults\MultiTenantInventory.ServiceDefaults.csproj", "{001521DD-1C1F-46EC-8D06-B82E9C8145CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{7DCCF57E-3434-42DD-A011-2E5701F2D06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DCCF57E-3434-42DD-A011-2E5701F2D06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCCF57E-3434-42DD-A011-2E5701F2D06A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6B660BA-1CA4-472E-AB2D-A54B6000181F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B660BA-1CA4-472E-AB2D-A54B6000181F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6B660BA-1CA4-472E-AB2D-A54B6000181F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B660BA-1CA4-472E-AB2D-A54B6000181F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{001521DD-1C1F-46EC-8D06-B82E9C8145CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{001521DD-1C1F-46EC-8D06-B82E9C8145CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{001521DD-1C1F-46EC-8D06-B82E9C8145CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{001521DD-1C1F-46EC-8D06-B82E9C8145CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

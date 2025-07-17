@@ -21,12 +21,18 @@ type InventoryState = {
     items: Item[];
     isLoading: boolean;
     error: string | null;
+    recentlyHighlightedId: number | null;
+    recentlyHighlightedAction: 'add' | 'update' | 'delete' | 'checkin' | 'checkout' | null;
 };
 
 const initialState: InventoryState = {
     items: [],
     isLoading: false,
-    error: null
+    error: null,
+    recentlyHighlightedId: null,
+    recentlyHighlightedAction: null,
+
+
 };
 
 export const InventoryStore = signalStore(
@@ -77,16 +83,17 @@ export const InventoryStore = signalStore(
                 switchMap((item) =>
                     inventoryService.addItem(item).pipe(
                         tapResponse({
-                            next: (newItem) =>{
+                            next: (newItem) => {
+
                                 patchState(store, {
                                     items: [...store.items(), newItem as Item], error: null
-                
+
                                 }),
-                                snack.open(`Item "${newItem.name}" added successfully`, 'Close', { duration: 4000 });
-                                loadItems();
+                                    snack.open(`Item "${newItem.name}" added successfully`, 'Close', { duration: 4000 });
+                                loadItems()
                             },
                             error: (error: HttpErrorResponse) => {
-                                patchState(store, { error: error.error ?? 'error adding item' } );
+                                patchState(store, { error: error.error ?? 'error adding item' });
                                 snack.open(`Failed to add item: ${error.error}`, 'Close', { duration: 4000 });
                             }
                         })
@@ -126,7 +133,7 @@ export const InventoryStore = signalStore(
                 switchMap((itemId) =>
                     inventoryService.checkInItem(itemId).pipe(
                         tapResponse({
-                            next: () =>{
+                            next: () => {
                                 patchState(store, {
                                     items: store.items().map((item) =>
                                         item.id.toString() === itemId ? { ...item, isCheckedOut: false } : item
@@ -135,7 +142,7 @@ export const InventoryStore = signalStore(
                                 snack.open(`Item checked in successfully`, 'Close', { duration: 4000 });
                                 loadItems();
                             },
-                            error: (error: HttpErrorResponse) =>{
+                            error: (error: HttpErrorResponse) => {
                                 patchState(store, { error: error.message ?? 'error checking in item' })
                                 snack.open(`Failed to check in item: ${error.error}`, 'Close', { duration: 4000 });
                             }
@@ -183,13 +190,13 @@ export const InventoryStore = signalStore(
                                 snack.open(`Item "${resultItem.name}" updated successfully`, 'Close', { duration: 4000 });
                                 loadItems();
                             },
-                            error: (error: HttpErrorResponse) =>{
+                            error: (error: HttpErrorResponse) => {
                                 patchState(store, {
                                     error: error.message ?? 'error updating item'
                                 })
                                 snack.open(`Failed to update item: ${error.error}`, 'Close', { duration: 4000 });
                             }
-                                
+
                         })
                     )
                 )
@@ -197,6 +204,94 @@ export const InventoryStore = signalStore(
         );
 
 
+
+        const itemAdded = (item: Item) => {
+
+            console.log("SignalR - item added", item);
+
+            patchState(store, {
+                items: [...store.items(), item],
+                recentlyHighlightedId: item.id,
+                recentlyHighlightedAction: 'add'
+
+            });
+
+            snack.open(`🟢 Item "${item.name}" was added by another user`, 'Close', { duration: 4000 });
+
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
+
+
+
+        const itemUpdated = (item: Item) => {
+            patchState(store, {
+                items: store.items().map(i => i.id === item.id ? item : i),
+                recentlyHighlightedId: item.id,
+                recentlyHighlightedAction: 'update'
+            });
+
+            snack.open(`🔄 Item "${item.name}" was updated by another user`, 'Close', { duration: 4000 });
+
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
+
+
+
+
+        const itemDeleted = (id: number) => {
+            const deletedItem = store.items().find(i => i.id === id);
+            patchState(store, {
+                recentlyHighlightedId: id,
+                recentlyHighlightedAction: 'delete',
+
+            });
+            snack.open(`🗑️ Item "${deletedItem?.name ?? id}" was deleted by another user`, 'Close',
+                { duration: 4000 });
+
+            setTimeout(() => {
+                patchState(store, {
+                    items: store.items().filter(i => i.id !== id),
+                    recentlyHighlightedId: null,
+                    recentlyHighlightedAction: null
+                });
+            }, 3000);
+        };
+
+        const itemCheckedOut = (id: number) => {
+            const checkedOutItem = store.items().find(i => i.id === id);
+            if (!checkedOutItem) return;
+            patchState(store, {
+                items: store.items().map(i =>
+                    i.id === id ? { ...i, isCheckedOut: true } : i
+                ),
+                recentlyHighlightedId: id,
+                recentlyHighlightedAction: 'checkout'
+            });
+            snack.open(`📤 Item "${checkedOutItem.name}" was checked out by another user`, 'Close', { duration: 4000 });
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
+
+        const itemCheckedIn = (id: number) => {
+            const checkedInItem = store.items().find(i => i.id === id);
+            if (!checkedInItem) return;
+            patchState(store, {
+                items: store.items().map(i =>
+                    i.id === id ? { ...i, isCheckedOut: false } : i
+                ),
+                recentlyHighlightedId: id,
+                recentlyHighlightedAction: 'checkin'
+            });
+            snack.open(`📥 Item "${checkedInItem.name}" was checked in by another user`, 'Close', { duration: 4000 });
+            setTimeout(() => {
+                patchState(store, { recentlyHighlightedId: null, recentlyHighlightedAction: null });
+            }, 3000);
+        };
 
 
 
@@ -207,7 +302,12 @@ export const InventoryStore = signalStore(
             checkoutItem,
             checkinItem,
             softDeleteItem,
-            updateItem
+            updateItem,
+            itemAdded,
+            itemUpdated,
+            itemDeleted,
+            itemCheckedOut,
+            itemCheckedIn
         };
     })
 
