@@ -15,6 +15,13 @@ public class InventoryHub(ISignalRCallerContext _callerContext) : Hub
         await Groups.AddToGroupAsync(connectionId, tenantId);
     }
 
+    public async Task UnregisterTenant(string tenantId)
+    {
+        string connectionId = Context.ConnectionId;
+        await Groups.RemoveFromGroupAsync(connectionId, tenantId);
+    }
+
+
     public override Task OnDisconnectedAsync(Exception exception)
     {
         return base.OnDisconnectedAsync(exception);

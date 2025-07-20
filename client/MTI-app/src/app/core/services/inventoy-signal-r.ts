@@ -1,4 +1,4 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { InventoryStore } from '../../shared/state/InventoryState';
@@ -13,8 +13,10 @@ export class InventorySignalR {
   private readonly tenantStore = inject(TenantStore);
 
   private hubConnection!: signalR.HubConnection;
-  private readonly tenantId = signal(this.tenantStore.selectedTenant());
+  // private readonly tenantId = computed(() => this.tenantStore.selectedTenant());
+  private tenantId = this.tenantStore.selectedTenant;
   private apiUrl = environment.apiBaseUrl;
+  private lastRegisteredTenantId: string | null = null;
 
 
   public connectionStatus$ = new BehaviorSubject<'connected' | 'disconnected' | 'reconnecting'>('disconnected');
@@ -29,6 +31,10 @@ export class InventorySignalR {
       .withAutomaticReconnect([0, 2000, 5000, 10000])
       .build();
 
+    effect(() => {
+      const tenantId = this.tenantId();
+      this.registerTenant();
+    });
 
     this.hubConnection.onclose(() => {
       console.warn('SignalR disconnected');
@@ -43,6 +49,7 @@ export class InventorySignalR {
     this.hubConnection.onreconnected(async (connectionId) => {
       console.log('SignalR reconnected with connectionId:', connectionId);
       this.connectionStatus$.next('connected');
+
 
 
       await this.registerTenant();
@@ -72,15 +79,29 @@ export class InventorySignalR {
 
   private async registerTenant(): Promise<void> {
     const tenantId = this.tenantId();
-    if (this.hubConnection?.state === signalR.HubConnectionState.Connected && tenantId) {
+    if (
+      this.hubConnection?.state === signalR.HubConnectionState.Connected &&
+      tenantId &&
+      tenantId !== this.lastRegisteredTenantId
+    ) {
       try {
+
+        if (this.lastRegisteredTenantId) {
+          await this.hubConnection.invoke("UnregisterTenant", this.lastRegisteredTenantId);
+          console.log(`Unregistered from tenant group: ${this.lastRegisteredTenantId}`);
+        }
+
         await this.hubConnection.invoke("RegisterTenant", tenantId);
         console.log(`Registered to tenant group: ${tenantId}`);
+        this.lastRegisteredTenantId = tenantId;
+
       } catch (error) {
         console.error(`Failed to register tenant ${tenantId}`, error);
       }
     }
   }
+
+
 
 
   private registerHandlers() {

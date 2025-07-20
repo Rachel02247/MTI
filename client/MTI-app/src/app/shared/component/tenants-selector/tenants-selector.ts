@@ -10,6 +10,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule  } from '@angular/material/menu';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-tenants-selector',
@@ -22,7 +24,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIcon,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatMenuModule,
+    MatToolbar
   ],
   templateUrl: './tenants-selector.html',
   styleUrls: ['./tenants-selector.scss']

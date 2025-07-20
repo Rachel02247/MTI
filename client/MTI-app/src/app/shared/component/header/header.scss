@@ -1,3 +1,5 @@
+
+
 .inventory-toolbar {
   border-radius: 8px 8px 0 0;
   padding: 40px 80px 40px 40px;
@@ -42,7 +44,7 @@
       color: white;
     }
   }
-}
+
 
 .connection-indicator {
   display: flex;
@@ -74,3 +76,41 @@
 .status-label {
   font-size: 13px;
 }
+
+
+
+
+  @media (max-width: 768px) {
+    
+    align-items: flex-start;
+    padding: 20px 16px;
+    gap: 16px;
+
+    .inventory-title {
+      font-size: 24px;
+
+      .inventory-sub-title {
+       display: none;
+      }
+    }
+
+    .tenant-selector {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .tenant-dropdown {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .connection-indicator {
+      font-size: 12px;
+      padding: 1px 6px;
+    }
+  }
+}
+
+  
+
+  

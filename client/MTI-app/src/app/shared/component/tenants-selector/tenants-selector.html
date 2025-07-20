@@ -1,24 +1,26 @@
 <div class="tenant-selector-row">
-  <mat-select
-    [ngModel]="selectedTenantName()"
-    (ngModelChange)="onChange($event)"
-    class="tenant-select"
-    placeholder="Select Tenant"
-    disableRipple
-  >
-    @for (tenant of store.tenants(); track tenant.id) {
+    <mat-select class="tenant-select" placeholder="Select Tenant" [ngModel]="selectedTenantName()"
+      (ngModelChange)="onChange($event)">
+      @for (tenant of store.tenants(); track tenant.id) {
       <mat-option [value]="tenant.name">{{ tenant.name }}</mat-option>
-    }
-  </mat-select>
+      }
+    </mat-select>
+    <div class="icon-actions-mobile">
+      <button mat-icon-button class="hamburger-icon" [matMenuTriggerFor]="tenantMenu" aria-label="Tenant menu">
+        <mat-icon>menu</mat-icon>
+      </button>
 
-  <button
-    mat-icon-button
-    (click)="clearSelection()"
-    class="logout-icon"
-    [class.visible]="selectedTenantName()"
-    matTooltip="Clear selection"
-    aria-label="Clear tenant selection"
-  >
-    <mat-icon>logout</mat-icon>
-  </button>
+      <mat-menu #tenantMenu="matMenu">
+        @for (tenant of store.tenants(); track tenant.id) {
+        <button mat-menu-item (click)="onChange(tenant.name)">
+          {{ tenant.name }}
+        </button>
+        }
+      </mat-menu>
+
+      <button mat-icon-button (click)="clearSelection()" class="logout-icon" [class.visible]="selectedTenantName()"
+        matTooltip="Clear selection" aria-label="Clear tenant selection">
+        <mat-icon>logout</mat-icon>
+      </button>
+  </div>
 </div>

@@ -10,7 +10,7 @@ public static class BuilderExtension
                  .AddDatabase("mtidb");
 
 
-        var mtiApi = builder.AddProject<Projects.MultiTanentInventory>("mti")
+        var mtiApi = builder.AddProject<Projects.MultiTanentInventory>("mtiapi")
                          .WaitFor(sql)
                          .WithReference(sql);
 
