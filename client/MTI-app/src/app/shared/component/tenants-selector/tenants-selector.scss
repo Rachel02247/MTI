@@ -2,21 +2,44 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative; // חשוב למיקום יחסי במסך קטן
+
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    width: 100%;
+    padding-right: 8px;
+  }
 }
 
-.tenant-select {
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  flex-shrink: 0;
+.icon-actions-mobile {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    right: 10;
+  
+    // padding: 4px;
+    z-index: 10;
+  }
+}
+
+.hamburger-icon,
+.logout-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+
+  mat-icon {
+    font-size: 22px;
+    color: #ccc;
+  }
 }
 
 .logout-icon {
-  width: 32px;
-  height: 32px;
-  color: #ccc7c7;
   opacity: 0;
   transform: scale(0.9);
   pointer-events: none;
@@ -27,8 +50,17 @@
     transform: scale(1);
     pointer-events: auto;
   }
+}
 
-  mat-icon {
-    font-size: 20px;
+.tenant-select {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    display: none;
   }
 }

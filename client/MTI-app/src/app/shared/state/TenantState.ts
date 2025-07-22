@@ -17,12 +17,15 @@ type TenantState = {
     tenants: TenantDetail[];
     selectedTenant: string | null;
     error: string | null;
+    signalRConnectionId: string | null;
 };
 
 const initialState: TenantState = {
     tenants: [],
     selectedTenant: sessionStorage.getItem(SELECTED_TENANT_KEY),
-    error: null
+    error: null,
+    signalRConnectionId: null
+
 };
 
 export const TenantStore = signalStore(

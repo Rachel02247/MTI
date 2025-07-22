@@ -1,3 +1,5 @@
+
+
 .inventory-toolbar {
   border-radius: 8px 8px 0 0;
   padding: 40px 80px 40px 40px;
@@ -42,4 +44,73 @@
       color: white;
     }
   }
+
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 60px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
+
+.connection-indicator.connected {
+  color: #2e7d32; 
+  background-color: #e8f5e9;
+}
+
+.connection-indicator.disconnected {
+  color: #c62828; 
+  background-color: #ffebee;
+}
+
+.connection-indicator.reconnecting {
+  color: #ef6c00;           
+  background-color: #fff3e0; 
+}
+
+
+.status-label {
+  font-size: 13px;
+}
+
+
+
+
+  @media (max-width: 768px) {
+    
+    align-items: flex-start;
+    padding: 20px 16px;
+    gap: 16px;
+
+    .inventory-title {
+      font-size: 24px;
+
+      .inventory-sub-title {
+       display: none;
+      }
+    }
+
+    .tenant-selector {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .tenant-dropdown {
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .connection-indicator {
+      font-size: 12px;
+      padding: 1px 6px;
+    }
+  }
+}
+
+  
+
+  

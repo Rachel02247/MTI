@@ -4,5 +4,6 @@
     string Category,
     string Description,
     bool IsActive,
-    bool IsCheckedOut
+    bool IsCheckedOut,
+    string TenantId
 );

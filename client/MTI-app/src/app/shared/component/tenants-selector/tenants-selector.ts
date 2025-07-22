@@ -10,46 +10,47 @@ import { MatIcon } from '@angular/material/icon';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule  } from '@angular/material/menu';
+import { MatToolbar } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-tenants-selector',
   standalone: true,
   imports: [
     CommonModule,
-     FormsModule,
-      MatSelect,
-      MatOption,
-      MatIcon,
-      MatButtonModule,
-      MatIconModule,
-      MatTooltipModule
-    ],
+    FormsModule,
+    MatSelect,
+    MatOption,
+    MatIcon,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatToolbar
+  ],
   templateUrl: './tenants-selector.html',
   styleUrls: ['./tenants-selector.scss']
 })
-export class TenantsSelector{
+export class TenantsSelector {
 
   store = inject(TenantStore);
   tenantService = inject(Tenant);
 
 
 
-  tenants: TenantDetail[] = [];
+  tenants = this.store.tenants;
+  selectedTenantName = this.store.selectedTenant;
 
-selectedTenantName: string = '';
-
-onChange(name: string) {
-  this.selectedTenantName = name;
-  this.store.setSelectedTenant(name);
-}
+  onChange(name: string) {
+    this.store.setSelectedTenant(name);
+  }
 
   clearSelection() {
-    this.selectedTenantName = '';
     this.store.setSelectedTenant('');
   }
 }
 
- 
+
 
 
 

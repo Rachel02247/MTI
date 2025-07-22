@@ -57,7 +57,8 @@ export class InventoryList {
 
   isLoading = this.store.isLoading;
   items = this.store.items;
-  
+  recentlyHighlightedId = this.store.recentlyHighlightedId;
+  recentlyHighlightedAction = this.store.recentlyHighlightedAction
 
   borrowItem(item: Item) {
 
@@ -98,4 +99,6 @@ export class InventoryList {
       default: return '';
     }
   }
+
+
 }
